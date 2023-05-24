@@ -1,10 +1,7 @@
 import os
-from dotenv import load_dotenv
 from twilio.rest import Client
 from typing import Optional
 from fastapi import FastAPI
-
-load_dotenv()
 
 app = FastAPI()
 
