@@ -14,7 +14,11 @@ api_secret = os.environ.get("API_SECRET")
 
 client = Client(api_key, api_secret, account_sid)
 
-@app.get("/")
+@app.get("/health")
+async def health():
+    return {"message": "ok"}
+
+@app.get("/messages")
 async def root():
     messages = client.messages.list()
     if len(messages) == 0:
