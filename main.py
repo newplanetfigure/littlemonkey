@@ -57,6 +57,11 @@ def get_decoded_token(request: Request):
     return decoded_token
 
 
+@app.head("health")
+async def head_health():
+    return {"message": "ok"}
+
+
 @app.get("/health")
 async def health():
     return {"message": "ok"}
