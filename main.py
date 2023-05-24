@@ -63,7 +63,7 @@ async def messages():
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     </head>
     <body>
-        <div class="table-responsive">
+        <div class="table-responsive p-3">
             <h1>Send message</h1>
             <form id="message_send_form" action="/message" method="post">
                 <div class="form-group">
@@ -81,7 +81,7 @@ async def messages():
                 <button type="submit" class="btn btn-primary">Send</button>
             </form>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive p-3">
             <table id="messages_table" class="table">
                 <thead>
                     <tr>
