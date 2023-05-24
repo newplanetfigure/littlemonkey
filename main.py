@@ -9,13 +9,11 @@ from typing import Optional
 from pydantic import BaseModel
 
 from fastapi import FastAPI, Form, HTTPException, Depends, Cookie, Body, Request
-from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 load_dotenv()
 
 app = FastAPI()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 account_sid = os.environ.get("ACCOUNT_SID")
 api_key = os.environ.get("API_KEY")
