@@ -33,7 +33,7 @@ def verify_password(password_plain, password_hashed):
 def create_access_token():
     payload = {
         "exp": datetime.datetime.now(tz=datetime.timezone.utc)
-        + datetime.timedelta(seconds=3600)
+        + datetime.timedelta(seconds=86400)
     }
     return jwt.encode(payload, jwt_secret, algorithm="HS256")
 
