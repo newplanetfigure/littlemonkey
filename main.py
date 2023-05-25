@@ -80,7 +80,7 @@ async def login_main():
         <div class="table-responsive p-3">
             <h1>Login</h1>
             <form action="/login" method="post">
-                <div class="form-group">
+                <div class="form-group mb-3">
                    <label for="password">Password:</label>
                    <input type="password" class="form-control" id="password" name="password" required>
                 </div>
@@ -140,6 +140,9 @@ async def messages_json(decoded_token: str = Depends(get_decoded_token)):
 @app.get("/messages")
 async def messages(decoded_token: str = Depends(get_decoded_token)):
     messages = client.messages.list()
+    exp = decoded_token['exp']
+    now = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
+    expires_in = exp - now
 
     body = ""
     for sms in client.messages.list():
@@ -160,19 +163,30 @@ async def messages(decoded_token: str = Depends(get_decoded_token)):
     </head>
     <body>
         <div class="table-responsive p-3">
-            <h1>Send message</h1>
+            <h3>Login expires in 
+    """
+    html_content += f"{expires_in/3600:.2f} h"
+    html_content += """
+             </h3>
+        </div>
+        <div class="table-responsive p-3">
+            <h3>Send message</h3>
             <form id="message_send_form" action="/message" method="post">
-                <div class="form-group">
-                   <label for="from_">From:</label>
-                   <input type="text" class="form-control" id="from_" name="from_" required>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                       <label for="from_">From:</label>
+                       <input type="text" class="form-control" id="from_" name="from_" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                       <label for="to">To:</label>
+                       <input type="text" class="form-control" id="to" name="to" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                   <label for="to">To:</label>
-                   <input type="text" class="form-control" id="to" name="to" required>
-                </div>
-                <div class="form-group">
-                   <label for="body">Body:</label>
-                   <input type="text" class="form-control" id="body" name="body" required>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                       <label for="body">Body:</label>
+                       <input type="text" class="form-control" id="body" name="body" required>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Send</button>
             </form>
