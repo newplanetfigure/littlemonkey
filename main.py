@@ -19,6 +19,7 @@ account_sid = os.environ.get("ACCOUNT_SID")
 api_key = os.environ.get("API_KEY")
 api_secret = os.environ.get("API_SECRET")
 jwt_secret = os.environ.get("JWT_SECRET")
+jwt_expires_in_s = int(os.environ.get("JWT_EXPIRES_IN_S"))
 password_hashed = os.environ.get("PASSWORD_HASHED").encode()
 
 client = Client(api_key, api_secret, account_sid)
@@ -31,7 +32,7 @@ def verify_password(password_plain, password_hashed):
 def create_access_token():
     payload = {
         "exp": datetime.datetime.now(tz=datetime.timezone.utc)
-        + datetime.timedelta(seconds=86400)
+        + datetime.timedelta(seconds=jwt_expires_in_s)
     }
     return jwt.encode(payload, jwt_secret, algorithm="HS256")
 
@@ -143,6 +144,9 @@ async def messages(decoded_token: str = Depends(get_decoded_token)):
     exp = decoded_token['exp']
     now = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
     expires_in = exp - now
+    expires_in_h = int(expires_in/3600)
+    expires_in_m = int(expires_in%3600/60)
+    expires_in_s = int(expires_in%60)
 
     body = ""
     for sms in client.messages.list():
@@ -165,7 +169,7 @@ async def messages(decoded_token: str = Depends(get_decoded_token)):
         <div class="table-responsive p-3">
             <h3>Login expires in 
     """
-    html_content += f"{expires_in/3600:.2f} h"
+    html_content += f"{expires_in_h}h {expires_in_m}m {expires_in_s}s"
     html_content += """
              </h3>
         </div>
