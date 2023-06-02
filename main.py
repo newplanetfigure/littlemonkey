@@ -148,15 +148,24 @@ async def messages(decoded_token: str = Depends(get_decoded_token)):
     expires_in_m = int(expires_in%3600/60)
     expires_in_s = int(expires_in%60)
 
-    body = ""
+    body_messages = ""
     for sms in client.messages.list():
-        body += "<tr>"
-        body += f"<td>{sms.from_}</td>"
-        body += f"<td>{sms.to}</td>"
-        body += f"<td>{sms.date_sent}</td>"
-        body += f"<td>{sms.body}</td>"
-        body += f"<td>{sms.num_media}</td>"
-        body += "</tr>"
+        body_messages += "<tr>"
+        body_messages += f"<td>{sms.from_}</td>"
+        body_messages += f"<td>{sms.to}</td>"
+        body_messages += f"<td>{sms.date_sent}</td>"
+        body_messages += f"<td>{sms.body}</td>"
+        body_messages += f"<td>{sms.num_media}</td>"
+        body_messages += "</tr>"
+        
+    body_calls = ""
+    for call in client.calls.list():
+        body_calls += "<tr>"
+        body_calls += f"<td>{call.from_formatted}</td>"
+        body_calls += f"<td>{call.to_formatted}</td>"
+        body_calls += f"<td>{call.date_created}</td>"
+        body_calls += f"<td>{call.status}</td>"
+        body_calls += "</tr>"
 
     html_content = """
     <!DOCTYPE html>
@@ -196,19 +205,38 @@ async def messages(decoded_token: str = Depends(get_decoded_token)):
             </form>
         </div>
         <div class="table-responsive p-3">
+            <h3>SMS</h3>
             <table id="messages_table" class="table">
                 <thead>
                     <tr>
                         <th>From</th>
                         <th>To</th>
-                        <th>Date sent</th>
+                        <th>Date</th>
                         <th>Body</th>
                         <th>Num media</th>
                     </tr>
                 </thead>
                 <tbody>
     """
-    html_content += body
+    html_content += body_messages
+    html_content += """
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive p-3">
+            <h3>Calls</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+    """
+    html_content += body_calls
     html_content += """
                 </tbody>
             </table>
